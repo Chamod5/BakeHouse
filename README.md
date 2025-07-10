@@ -33,8 +33,3 @@ BakeHouse is a dedicated marketplace app for cake makers and buyers. Sellers can
 - Java/Kotlin SDK (target version: API X)
 - Backend service (e.g. Firebase or REST API) configured
 
-### Steps
-
-```bash
-git clone https://github.com/YourUsername/BakeHouse.git
-cd BakeHouse
