@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_image"
+    android:orientation="vertical"
+    android:padding="16dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pay Now"
+        android:gravity="center"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:textColor="@color/blue1"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rl1"
+        android:layout_marginTop="50dp"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="335dp"
+            android:layout_height="185dp"
+            android:src="@drawable/bank_card"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BANK NAME"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="25dp"
+            android:layout_marginStart="40dp"
+            android:id="@+id/bankname"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Code.."
+            android:textSize="18sp"
+            android:layout_below="@+id/bankname"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="45dp"
+            android:layout_marginStart="40dp"
+            android:id="@+id/code"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CARDHOLDER"
+            android:textSize="15sp"
+            android:layout_below="@+id/code"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="40dp"
+            android:id="@+id/cardholder"/>
+
+        <LinearLayout
+            android:id="@+id/ll1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/cardholder"
+            android:layout_below="@+id/code"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="30dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="06"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/mm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MM"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/div"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/ll1"
+            android:layout_below="@+id/code"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="5dp"
+            android:text="/"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"/>
+
+        <LinearLayout
+            android:id="@+id/ll2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/div"
+            android:layout_below="@+id/code"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="5dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="24"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/yy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="YY"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/cvv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CVV"
+            android:layout_toEndOf="@+id/ll2"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_below="@+id/code"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rl2"
+        android:layout_below="@+id/rl1"
+        android:layout_marginTop="30dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ENTER 16-DIGIT NUMBER"
+            android:layout_marginStart="20dp"
+            android:textColor="@color/blue1"
+            android:textSize="12sp"
+            android:id="@+id/tv1"/>
+
+        <EditText
+            android:id="@+id/et1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="XXXX"
+            android:inputType="number"
+            android:maxLength="4"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="15dp" />
+
+        <EditText
+            android:id="@+id/et2"
+            android:layout_toEndOf="@+id/et1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="XXXX"
+            android:layout_marginStart="25dp"
+            android:inputType="number"
+            android:maxLength="4"
+            android:layout_marginTop="15dp" />
+
+        <EditText
+            android:id="@+id/et3"
+            android:layout_toEndOf="@+id/et2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="XXXX"
+            android:layout_marginStart="25dp"
+            android:inputType="number"
+            android:maxLength="4"
+            android:layout_marginTop="15dp" />
+
+        <EditText
+            android:id="@+id/et4"
+            android:layout_toEndOf="@+id/et3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="XXXX"
+            android:layout_marginStart="25dp"
+            android:inputType="number"
+            android:maxLength="4"
+            android:layout_marginTop="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CARDHOLDER NAME"
+            android:id="@+id/tv2"
+            android:layout_below="@+id/et1"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:textColor="@color/blue1"
+            android:textSize="12sp"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="CARD HOLDER"
+            android:id="@+id/et5"
+            android:layout_below="@+id/tv2"
+            android:layout_marginStart="20dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EXPIRY"
+            android:id="@+id/tv3"
+            android:layout_below="@+id/et5"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:textColor="@color/blue1"
+            android:textSize="12sp"/>
+
+        <EditText
+            android:id="@+id/et6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="MM"
+            android:inputType="number"
+            android:maxLength="2"
+            android:layout_below="@+id/tv3"
+            android:layout_marginStart="20dp"/>
+
+        <EditText
+            android:id="@+id/et7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/et6"
+            android:hint="YY"
+            android:inputType="number"
+            android:maxLength="2"
+            android:layout_below="@+id/tv3"
+            android:layout_marginStart="20dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ENTER CVV"
+            android:id="@+id/tv4"
+            android:layout_below="@+id/et6"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:textColor="@color/blue1"
+            android:textSize="12sp"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/et8"
+            android:hint="XXX"
+            android:inputType="number"
+            android:maxLength="3"
+            android:layout_toEndOf="@+id/tv4"
+            android:layout_below="@+id/et7"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="20dp"/>
+
+        <Button
+            android:id="@+id/buttonSubmitPayment"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_below="@+id/et8"
+            android:layout_marginHorizontal="60dp"
+            android:layout_marginTop="55dp"
+            android:backgroundTint="@color/blue2"
+            android:gravity="center"
+            android:text="Pay Now"
+            android:textSize="20sp"
+            android:layout_gravity="center_horizontal" />
+
+        <CheckBox
+            android:id="@+id/checkboxSaveCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save card details"
+            android:layout_below="@+id/et8"
+            android:textSize="16sp"
+            android:layout_marginTop="5dp"
+            android:layout_marginHorizontal="110dp"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

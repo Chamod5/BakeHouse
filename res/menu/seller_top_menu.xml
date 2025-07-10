@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/Seller_birthday_cakes"
+        android:title="Birthday Cakes" />
+    <item
+        android:id="@+id/Seller_wedding_cakes"
+        android:title="Wedding Cakes" />
+    <item
+        android:id="@+id/Seller_others_cakes"
+        android:title="Others" />
+</menu>

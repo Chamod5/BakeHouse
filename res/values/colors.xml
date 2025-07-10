@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+
+    <color name="white">#FFFFFFFF</color>
+  <!--  <color name="lavender">#8692f7</color> -->
+    <color name="red">#c70000</color>
+
+
+
+    <color name="background_color">#FFF3E0</color> <!-- Light beige background -->
+    <color name="title_color">#D32F2F</color> <!-- Deep red for the title -->
+    <color name="category_text_color">#424242</color> <!-- Dark gray for category text -->
+    <color name="shadow_color">#c5c5c5</color> <!-- Semi-transparent black for shadow -->
+
+
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="graylight">#BEBEBE</color>
+    <color name="startblue">#2F4F4F</color>
+    <color name="endblue">#32CD32</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <!--My theme-->
+    <color name="Green">#105341</color>
+    <color name="Black">#000000</color>
+    <color name="lavender">#105341</color>
+    <color name="ash">#f4f1ec</color>
+    <color name="liteleaf">#9ed4c4</color>
+
+
+    <color name="blue1">#03045e</color>
+    <color name="blue2">#0077b6</color>
+    <color name="blue3">#00b4d8</color>
+    <color name="blue4">#90e0ef</color>
+    <color name="blue5">#caf0f8</color>
+
+
+</resources>
