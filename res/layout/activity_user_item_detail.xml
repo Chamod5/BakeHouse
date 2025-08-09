@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="16dp">
+
+        <!-- Main Image -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="8dp">
+
+            <ImageView
+                android:id="@+id/mainCakeImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_cake_placeholder" />
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Image Gallery -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Images"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_gravity="left"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/Black" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/imagesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Cake Details Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Title -->
+                <TextView
+                    android:id="@+id/cakeTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cake Title"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/Black"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- Category -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Category: "
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/Black" />
+
+                    <TextView
+                        android:id="@+id/cakeCategory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Birthday Cake"
+                        android:textSize="16sp"
+                        android:textColor="@color/red" />
+
+                </LinearLayout>
+
+                <!-- Price -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Price: "
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/Black" />
+
+                    <TextView
+                        android:id="@+id/cakePrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rs. 0.00"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/red" />
+
+                </LinearLayout>
+
+                <!-- Description -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Description:"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/Black"
+                    android:layout_marginBottom="4dp" />
+
+                <TextView
+                    android:id="@+id/cakeDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cake description will appear here"
+                    android:textSize="14sp"
+                    android:textColor="@color/Black"
+                    android:lineSpacingExtra="2dp" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginBottom="0dp"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/backButton"
+                android:layout_width="150dp"
+                android:layout_height="60dp"
+                android:layout_marginHorizontal="10dp"
+                android:text="Back"
+                android:backgroundTint="@color/blue2"
+                android:textSize="16sp">
+            </Button>
+            <Button
+                android:id="@+id/orderButton"
+                android:layout_width="150dp"
+                android:layout_height="60dp"
+                android:layout_marginHorizontal="10dp"
+                android:text="Order now"
+                android:backgroundTint="@color/blue2"
+                android:textSize="16sp">
+            </Button>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/addToCartButton"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_marginHorizontal="10dp"
+            android:text="Add to cart"
+            android:backgroundTint="@color/blue2"
+            android:gravity="center"
+            android:textSize="16sp">
+        </Button>
+
+    </LinearLayout>
+</ScrollView>

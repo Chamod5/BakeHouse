@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/WelcomeBanner"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="10dp"
+            app:cardBackgroundColor="@color/blue2">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/HelloImage"
+                    android:layout_width="160dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/hello_image"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@id/HelloImage"
+                    android:layout_toStartOf="@id/HelloImage"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="5dp">
+
+                    <TextView
+                        android:id="@+id/welcomeText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Welcome"
+                        android:textSize="30sp"
+                        android:textColor="@android:color/white"
+                        android:fontFamily="@font/bahnschrift"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/nameUser"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Guest"
+                        android:textSize="20sp"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/comic"
+                        android:layout_marginTop="4dp"/>
+
+                    <TextView
+                        android:id="@+id/messageUser"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Your cake, your way!"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/white"
+                        android:textStyle="italic"
+                        android:fontFamily="sans-serif-medium"
+                        android:layout_marginTop="4dp"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- First row (2 categories) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <!-- Birthday Cakes -->
+            <LinearLayout
+                android:id="@+id/Birthday_cake_category"
+                android:layout_width="0dp"
+                android:layout_height="220dp"
+                android:layout_weight="1"
+                android:layout_margin="8dp"
+                android:background="@drawable/category_background"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:src="@drawable/birthday_cake_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Birthday Cakes"
+                    android:textColor="@color/blue1"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/iskpota"
+                    android:layout_marginTop="12dp" />
+
+            </LinearLayout>
+
+            <!-- Wedding Cakes -->
+            <LinearLayout
+                android:id="@+id/Wedding_cake_category"
+                android:layout_width="0dp"
+                android:layout_height="220dp"
+                android:layout_weight="1"
+                android:layout_margin="8dp"
+                android:background="@drawable/category_background"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:src="@drawable/wedding_cake_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Wedding Cakes"
+                    android:textColor="@color/blue1"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/iskpota"
+                    android:layout_marginTop="12dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Single row for Others -->
+        <LinearLayout
+            android:id="@+id/Others_category"
+            android:layout_width="180dp"
+            android:layout_height="220dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/category_background"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:src="@drawable/others_cake_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Others"
+                android:textColor="@color/blue1"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/iskpota"
+                android:layout_marginTop="12dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

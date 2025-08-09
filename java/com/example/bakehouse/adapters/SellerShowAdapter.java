@@ -46,13 +46,13 @@ public class SellerShowAdapter extends RecyclerView.Adapter<SellerViewHolder> {
         holder.cake_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int position = holder.getAdapterPosition();
                 Intent intent = new Intent(context, SellerItemDetailActivity.class);
-                intent.putExtra("Images", cakeList.get(holder.getBindingAdapterPosition()).getImageUrls());
-                intent.putExtra("Title", cakeList.get(holder.getBindingAdapterPosition()).getTitle());
-                intent.putExtra("Description", cakeList.get(holder.getBindingAdapterPosition()).getDescription());
-                intent.putExtra("Price", cakeList.get(holder.getBindingAdapterPosition()).getPrice());
-
-                intent.putExtra("SellerId", cakeList.get(holder.getBindingAdapterPosition()).getSellerId());
+                intent.putExtra("Images", cakeList.get(position).getImageUrls());
+                intent.putExtra("Title", cakeList.get(position).getTitle());
+                intent.putExtra("Description", cakeList.get(position).getDescription());
+                intent.putExtra("Price", cakeList.get(position).getPrice());
+                intent.putExtra("SellerId", cakeList.get(position).getSellerId());
 
                 context.startActivity(intent);
             }

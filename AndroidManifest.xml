@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
 
     <application
         android:allowBackup="true"
@@ -15,15 +17,26 @@
         android:roundIcon="@mipmap/app_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.BakeHouse"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".MyProfileActivity"
+            android:name=".OrderingActivity"
             android:exported="false" />
+        <activity
+            android:name=".UserMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UserItemDetail"
+            android:exported="false" />
+        <activity
+            android:name=".Sellers.SellerMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".VolleyMultipartRequest"
+            android:exported="false"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".PaymentActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Categories.BirthdayCakeDetailActivity"
             android:exported="false" />
         <activity
             android:name=".Sellers.SellerItemDetailActivity"
@@ -34,20 +47,10 @@
             android:exported="false" />
         -->
         <activity
-            android:name=".Sellers.SellerProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Sellers.SellerHomeActivity"
-            android:exported="false"
-            android:label="@string/title_activity_seller_home" />
-        <activity
-            android:name=".Sellers.SellerLogInActivity"
+            android:name=".Sellers.SellerLoginActivity"
             android:exported="false" />
         <activity
             android:name=".Sellers.SellerRegistrationActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Sellers.SellerUploadCakeActivity"
             android:exported="false" />
         <activity
             android:name=".models.Sellers"
@@ -65,19 +68,7 @@
             android:name=".Categories.WeddingCakeActivity"
             android:exported="false" />
         <activity
-            android:name=".ProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".CartActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SearchActivity"
-            android:exported="false" />
-        <activity
             android:name=".RegistrationActivity"
-            android:exported="false" />
-        <activity
-            android:name=".HomePageActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

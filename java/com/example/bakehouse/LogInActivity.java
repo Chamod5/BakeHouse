@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -16,14 +17,19 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.bakehouse.Sellers.SellerLogInActivity;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.android.volley.Request;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LogInActivity extends AppCompatActivity {
+
+    private static final String TAG = "LogInActivity";
 
     Button loginButton;
     EditText username, password;
@@ -61,11 +67,11 @@ public class LogInActivity extends AppCompatActivity {
     }
 
     private void loginUser() {
-        String userUsername = username.getText().toString();
-        String userPassword = password.getText().toString();
+        String userEmail = username.getText().toString().trim();
+        String userPassword = password.getText().toString().trim();
 
-        if (TextUtils.isEmpty(userUsername)) {
-            Toast.makeText(this, "Username is empty", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(userEmail)) {
+            Toast.makeText(this, "Email is empty", Toast.LENGTH_SHORT).show();
             progressBar.setVisibility(View.GONE);
             return;
         }
@@ -76,54 +82,87 @@ public class LogInActivity extends AppCompatActivity {
             return;
         }
 
-        // Reference to the "Users" node in Firebase Realtime Database
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        AppUtils.trustEveryone();
+        progressBar.setVisibility(View.VISIBLE);
 
-        // Query to find the user by username
-        reference.orderByChild("username").equalTo(userUsername).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        String retrievedPassword = snapshot.child("password").getValue(String.class);
+        String url = DbLink.BASE_URL + "login.php";
 
-                        if (retrievedPassword.equals(userPassword)) {
-                            String name = snapshot.child("name").getValue(String.class);
-                            String email = snapshot.child("email").getValue(String.class);
-                            String imageUrl = snapshot.child("profilepic").getValue(String.class);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                response -> {
+                    progressBar.setVisibility(View.GONE);
 
-                            progressBar.setVisibility(View.GONE);
+                    // Log the response to debug
+                    //Log.d(TAG, "Server response: " + response);
+
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        String status = jsonResponse.getString("status");
+                        String message = jsonResponse.getString("message");
+
+                        if (status.equals("success")) {
+                            int userId = jsonResponse.getInt("user_id");
+
+                            //Log.d(TAG, "Login successful - user_id: " + userId + ", email: " + userEmail);
+
                             Toast.makeText(LogInActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
 
-                            //Intent intent = new Intent(LogInActivity.this, HomePageActivity.class);
+                            // Save user data to SharedPreferences
+                            saveUserData(userId, userEmail);
 
-                            Intent intent2 = new Intent(LogInActivity.this, ProfileActivity.class);
-                            intent2.putExtra("name", name);
-                            intent2.putExtra("username", userUsername);
-                            intent2.putExtra("email", email);
-                            intent2.putExtra("imageUrl", imageUrl);
-                            startActivity(intent2);
+                            // Redirect to UserMainActivity with user_id and email
+                            Intent intent = new Intent(LogInActivity.this, UserMainActivity.class);
+                            intent.putExtra("user_id", userId);
+                            intent.putExtra("email", userEmail);
 
-                            finish(); // Close the login activity
+                            //Log.d(TAG, "Passing to UserMainActivity - user_id: " + userId + ", email: " + userEmail);
+
+                            startActivity(intent);
+                            finish();
                         } else {
-                            progressBar.setVisibility(View.GONE);
-                            Toast.makeText(LogInActivity.this, "Invalid Password", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LogInActivity.this, message, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        //Log.e(TAG, "JSON parsing error: " + e.getMessage());
+                        //Log.e(TAG, "Response was: " + response);
+
+                        // Handle old response format or JSON parsing error
+                        if (response.trim().equals("Login Success")) {
+                            Toast.makeText(LogInActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(LogInActivity.this, UserMainActivity.class);
+                            intent.putExtra("email", userEmail);
+                            // Note: user_id won't be available in this case
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Toast.makeText(LogInActivity.this, "Unexpected response format: " + response, Toast.LENGTH_LONG).show();
                         }
                     }
-                } else {
+                },
+                error -> {
                     progressBar.setVisibility(View.GONE);
-                    Toast.makeText(LogInActivity.this, "User does not exist", Toast.LENGTH_SHORT).show();
-                }
-            }
-
+                    //Log.e(TAG, "Network error: " + error.getMessage());
+                    Toast.makeText(LogInActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
+                }) {
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                progressBar.setVisibility(View.GONE);
-                Toast.makeText(LogInActivity.this, "Database Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("email", userEmail);
+                params.put("password", userPassword);
+                return params;
             }
-        });
+        };
+
+        Volley.newRequestQueue(this).add(stringRequest);
     }
 
+    private void saveUserData(int userId, String email) {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("user_id", userId);
+        editor.putString("email", email);
+        editor.putBoolean("isLoggedIn", true);
+        editor.apply();
 
-
+        //Log.d(TAG, "User data saved to SharedPreferences - user_id: " + userId);
+    }
 }

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="12dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="10dp">
+
+        <!-- Top Message -->
+        <TextView
+            android:id="@+id/topMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="My Order"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="16dp" />
+
+        <!-- Cake Details -->
+        <TextView
+            android:id="@+id/cakeTitle"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:text="Cake Title: "
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/Black"
+            android:layout_marginBottom="12dp"/>
+
+        <TextView
+            android:id="@+id/cakeSeller"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cake Seller: "
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/Black"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:id="@+id/cakeQuantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cake Quantity:"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/Black"
+            android:layout_marginBottom="12dp" />
+
+        <EditText
+            android:id="@+id/noOfCakes"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:inputType="number"
+            android:text="1"
+            android:layout_marginBottom="12dp"/>
+
+        <TextView
+            android:id="@+id/cakePrice"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:text="Price: "
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/Black"
+            android:layout_marginBottom="12dp"/>
+
+        <TextView
+            android:id="@+id/referenceNumber"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:text="Reference Number: "
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/Black"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Section Message -->
+        <TextView
+            android:id="@+id/detailsMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Please enter your details"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:paddingTop="24dp"
+            android:paddingBottom="8dp"
+            android:textColor="@color/blue1"/>
+
+        <!-- Personal Details -->
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Your Name"
+            android:inputType="textPersonName"
+            android:layout_marginBottom="12dp" />
+
+
+
+        <EditText
+            android:id="@+id/phoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Phone Number"
+            android:inputType="phone" />
+
+        <EditText
+            android:id="@+id/address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Address" />
+
+        <EditText
+            android:id="@+id/comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Comment" />
+
+        <!-- Payment Method -->
+        <TextView
+            android:id="@+id/paymentLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Payment Method"
+            android:textSize="16sp"
+            android:paddingTop="24dp"
+            android:paddingBottom="8dp"
+            android:textStyle="bold"
+            android:textColor="@color/blue1"/>
+
+        <RadioGroup
+            android:id="@+id/paymentMethodGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/radioOnlinePayment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Online Payment" />
+
+            <RadioButton
+                android:id="@+id/radioHandOverPayment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hand Over Payment" />
+        </RadioGroup>
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingTop="24dp">
+
+            <Button
+                android:id="@+id/btnBack"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:text="Back"
+                android:backgroundTint="@color/blue2"
+                android:textSize="16sp"/>
+
+            <Space
+                android:layout_width="16dp"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btnPlaceOrder"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:text="Confirm Order"
+                android:backgroundTint="@color/blue2"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

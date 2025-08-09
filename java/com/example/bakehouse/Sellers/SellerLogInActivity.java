@@ -1,154 +1,113 @@
 package com.example.bakehouse.Sellers;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.bakehouse.HomePageActivity;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.Request;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.bakehouse.AppUtils;
+import com.example.bakehouse.DbLink;
 import com.example.bakehouse.LogInActivity;
-import com.example.bakehouse.ProfileActivity;
 import com.example.bakehouse.R;
+import com.example.bakehouse.RegistrationActivity;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import org.json.JSONObject;
 
-public class SellerLogInActivity extends AppCompatActivity {
+import java.util.HashMap;
+import java.util.Map;
 
+public class SellerLoginActivity extends AppCompatActivity {
 
-    Button loginSellerButton;
-    EditText email, password;
-    TextView sellerSignUpText;
-    ProgressBar progressBar;
+    EditText emailEditText, passwordEditText;
+    TextView signUpText;
+    Button loginButton;
+    ProgressDialog progressDialog;
+
+    String url = DbLink.BASE_URL + "seller_login.php";   //database link
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seller_log_in);
 
-        progressBar = findViewById(R.id.progressbar);
-        progressBar.setVisibility(View.GONE);
+        emailEditText = findViewById(R.id.seller_login_Email);
+        passwordEditText = findViewById(R.id.seller_login_Password);
+        loginButton = findViewById(R.id.seller_login_Button);
+        signUpText = findViewById(R.id.signuplink);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Logging in...");
 
-        email = findViewById(R.id.seller_login_Email);
-        password = findViewById(R.id.seller_login_Password);
-        loginSellerButton = findViewById(R.id.seller_login_Button);
-        sellerSignUpText = findViewById(R.id.signuplink);
+        loginButton.setOnClickListener(view -> {
+            String email = emailEditText.getText().toString().trim();
+            String password = passwordEditText.getText().toString().trim();
 
-        sellerSignUpText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(SellerLogInActivity.this, SellerRegistrationActivity.class));
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            } else {
+                loginSeller(email, password);
             }
         });
 
-        loginSellerButton.setOnClickListener(new View.OnClickListener() {
+        signUpText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressBar.setVisibility(View.VISIBLE);
-                loginSeller();
+                startActivity(new Intent(SellerLoginActivity.this, SellerRegistrationActivity.class));
             }
         });
     }
 
-    private void loginSeller() {
+    private void loginSeller(String email, String password) {
+        progressDialog.show();
 
-        String sel_email = email.getText().toString();
-        String sel_password = password.getText().toString();
+        AppUtils.trustEveryone();
 
-        if (TextUtils.isEmpty(sel_email)) {
-            Toast.makeText(this, "Email is empty", Toast.LENGTH_SHORT).show();
-            progressBar.setVisibility(View.GONE);
-            return;
-        }
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+                response -> {
+                    progressDialog.dismiss();
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        String message = jsonObject.getString("message");
 
-        if (TextUtils.isEmpty(sel_password)) {
-            Toast.makeText(this, "Password is empty", Toast.LENGTH_SHORT).show();
-            progressBar.setVisibility(View.GONE);
-            return;
-        }
+                        if (message.equalsIgnoreCase("Login Success")) {
+                            String sellerEmail = jsonObject.getString("email");
 
+                            Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show();
 
-        String sellerId = getIntent().getStringExtra("sellerId");
-
-        // Reference to the "Users" node in Firebase Realtime Database
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Sellers");
-
-        // Query to find the user by email
-        reference.orderByChild("email").equalTo(sel_email).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        String retrievedPassword = snapshot.child("password").getValue(String.class);
-                        String sellerId = snapshot.getKey(); // Assuming the key is the seller ID
-
-
-                        if (retrievedPassword.equals(sel_password)) {
-
-                            String name = snapshot.child("name").getValue(String.class);
-                            String email = snapshot.child("email").getValue(String.class);
-                            String imageUrl = snapshot.child("profilepic").getValue(String.class);
-                            String phoneNo = snapshot.child("phone").getValue(String.class);
-                            String businessName = snapshot.child("business_name").getValue(String.class);
-                            String address = snapshot.child("address").getValue(String.class);
-
-
-
-                            // Store seller ID in SharedPreferences
-                            SharedPreferences sharedPreferences = getSharedPreferences("SellerPrefs", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("sellerId", sellerId);
-                            editor.apply();
-
-                            progressBar.setVisibility(View.GONE);
-                            Toast.makeText(SellerLogInActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                            //Intent intent = new Intent(SellerLogInActivity.this, SellerHomeActivity.class);
-
-                            Intent intent2 = new Intent(SellerLogInActivity.this, SellerHomeActivity.class);
-                            intent2.putExtra("name", name);
-                            intent2.putExtra("email", email);
-                            intent2.putExtra("phone", phoneNo);
-                            intent2.putExtra("business_name", businessName);
-                            intent2.putExtra("address", address);
-                            intent2.putExtra("imageUrl", imageUrl);
-
-                            intent2.putExtra("sellerId", sellerId);
-                            startActivity(intent2);
-                            finish(); // Close the login activity
-                        } else {
-                            progressBar.setVisibility(View.GONE);
-                            Toast.makeText(SellerLogInActivity.this, "Invalid Password", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(SellerLoginActivity.this, SellerMainActivity.class);
+                            intent.putExtra("sellerEmail", sellerEmail);  // pass email
+                            startActivity(intent);
+                            finish();
+                    } else {
+                            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                         }
+
+                    } catch (Exception e) {
+                        Toast.makeText(this, "Invalid response", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
                     }
-                } else {
-                    progressBar.setVisibility(View.GONE);
-                    Toast.makeText(SellerLogInActivity.this, "Seller does not exist", Toast.LENGTH_SHORT).show();
-                }
-            }
-
+                },
+                error -> {
+                    progressDialog.dismiss();
+                    //Toast.makeText(this, "Network Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                }) {
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                progressBar.setVisibility(View.GONE);
-                Toast.makeText(SellerLogInActivity.this, "Database Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            protected Map<String, String> getParams() {
+                Map<String, String> data = new HashMap<>();
+                data.put("email", email);
+                data.put("password", password);
+                return data;
             }
-        });
+        };
 
-
+        Volley.newRequestQueue(this).add(request);
     }
-
-
 }

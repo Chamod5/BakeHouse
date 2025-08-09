@@ -25,7 +25,7 @@
             android:layout_height="match_parent">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:layout_gravity="center_horizontal"
                 android:padding="20dp">
@@ -38,18 +38,30 @@
                     android:layout_gravity="center"
                     android:textSize="36sp"
                     android:textStyle="bold"
-                    android:layout_marginTop="30dp"/>
-
+                    android:layout_marginTop="10dp"/>
+<!--
                 <ImageView
                     android:id="@+id/rg_profilePic"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_gravity="center"
                     android:layout_marginBottom="20dp"
-                    app:tint="@color/blue4"
                     android:src="@drawable/baseline_upload_file_24"
                     android:layout_marginTop="10dp"
                     android:scaleType="fitXY"/>
+                -->
+
+                <ImageView
+                    android:id="@+id/rg_profilePic"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:scaleType="centerCrop"
+                    android:layout_gravity="center"
+                    android:src="@drawable/profile_icon"
+                    android:contentDescription="Profile picture"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="20dp"/>
+
 
                 <EditText
                     android:id="@+id/rg_name"
@@ -134,7 +146,8 @@
     <ProgressBar
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:id="@+id/progressbar"/>
+        android:id="@+id/progressbar"
+        android:visibility="gone"/>
 
 
     <LinearLayout
@@ -152,7 +165,7 @@
             android:textSize="15sp"/>
 
         <TextView
-            android:id="@+id/belowtext2"
+            android:id="@+id/goToLogin"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

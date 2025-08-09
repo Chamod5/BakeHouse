@@ -39,7 +39,7 @@
                     android:layout_gravity="center"
                     android:textSize="36sp"
                     android:textStyle="bold"
-                    android:layout_marginTop="60dp"/>
+                    android:layout_marginTop="20dp"/>
 
                 <TextView
                     android:id="@+id/seller_description"
@@ -71,8 +71,7 @@
                     android:layout_height="100dp"
                     android:layout_gravity="center"
                     android:layout_marginBottom="20dp"
-                    app:tint="@color/liteleaf"
-                    android:src="@drawable/baseline_upload_file_24"
+                    android:src="@drawable/profile_icon"
                     android:layout_marginTop="10dp"
                     android:scaleType="fitXY"/>
 
@@ -181,9 +180,10 @@
     </androidx.cardview.widget.CardView>
 
     <ProgressBar
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:id="@+id/progressbar"/>
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/progressbar"
+        android:visibility="gone"/>
 
 
     <LinearLayout

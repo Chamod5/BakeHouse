@@ -1,315 +1,235 @@
 package com.example.bakehouse.Sellers;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.bakehouse.AppUtils;
+import com.example.bakehouse.DbLink;
 import com.example.bakehouse.R;
-import com.example.bakehouse.models.Sellers;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.text.DateFormat;
-import java.util.Calendar;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
+import com.example.bakehouse.Sellers.SellerLoginActivity;
+import com.example.bakehouse.VolleyMultipartRequest;
+import com.example.bakehouse.database.AppDatabase;
+import com.example.bakehouse.database.Seller;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SellerRegistrationActivity extends AppCompatActivity {
 
-    ImageView profilepic;
-    String imageURL;
-    FirebaseAuth mAuth;
-    TextView seller_login_ask;
-    Button seller_registration_btn;
-    EditText sellerName, sellerPhone, sellerEmail, sellerBusinessName,sellerAddress,sellerPassword,sellerRePassword;
-    Uri uri;
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private Uri selectedImageUri;
+
+    private EditText nameSeller, phoneSeller, emailSeller, businessNameSeller, addressSeller, passwordSeller, confirmPasswordSeller;
+    private ImageView profileImageView;
+    private Button registerBtn;
+    private ProgressBar progressBar;
+    private TextView goToLogin;
+    private AppDatabase localDb;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seller_registration);
 
-        mAuth = FirebaseAuth.getInstance();
+        // Linking XML UI components
+        nameSeller = findViewById(R.id.seller_rg_name);
+        phoneSeller = findViewById(R.id.seller_rg_phone_no);
+        emailSeller = findViewById(R.id.seller_rg_email);
+        businessNameSeller = findViewById(R.id.seller_rg_business_name);
+        addressSeller = findViewById(R.id.seller_rg_business_address);
+        passwordSeller = findViewById(R.id.seller_rg_password);
+        confirmPasswordSeller = findViewById(R.id.seller_rg_repassword);
+        profileImageView = findViewById(R.id.seller_rg_profilePic);
+        registerBtn = findViewById(R.id.seller_btn_register);
+        progressBar = findViewById(R.id.progressbar);
+        goToLogin = findViewById(R.id.seller_login_ask);
+        profileImageView.setImageResource(R.drawable.profile_icon);
+
+        localDb = AppDatabase.getInstance(this);
 
 
-        seller_login_ask = findViewById(R.id.seller_login_ask);
-        seller_registration_btn = findViewById(R.id.seller_btn_register);
+        progressBar.setVisibility(ProgressBar.INVISIBLE);
 
-        profilepic = findViewById(R.id.seller_rg_profilePic);
+        // Open image picker on image click
+        profileImageView.setOnClickListener(v -> openGallery());
 
-        sellerName = findViewById(R.id.seller_rg_name);
-        sellerPhone = findViewById(R.id.seller_rg_phone_no);
-        sellerEmail = findViewById(R.id.seller_rg_email);
-        sellerBusinessName = findViewById(R.id.seller_rg_business_name);
-        sellerAddress = findViewById(R.id.seller_rg_business_address);
-        sellerPassword = findViewById(R.id.seller_rg_password);
-        sellerRePassword = findViewById(R.id.seller_rg_repassword);
-
-        seller_login_ask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(SellerRegistrationActivity.this,SellerLogInActivity.class);
-                startActivity(intent);
-            }
+        // Navigate to login
+        goToLogin.setOnClickListener(v -> {
+            startActivity(new Intent(SellerRegistrationActivity.this, SellerLoginActivity.class));
+            finish();
         });
 
-
-        ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK){
-                            Intent data = result.getData();
-                            uri = data.getData();
-                            profilepic.setImageURI(uri);
-                        } else {
-                            Toast.makeText(SellerRegistrationActivity.this, "No profile picture", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                }
-        );
-
-        profilepic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent photoPicker = new Intent(Intent.ACTION_PICK);
-                photoPicker.setType("image/*");
-                activityResultLauncher.launch(photoPicker);
-            }
-        });
-
-
-        seller_registration_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                saveData();
-            }
-        });
-
-
-    }
-
-    private void saveData() {
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Profile Images")
-                .child(uri.getLastPathSegment());
-        AlertDialog.Builder builder = new AlertDialog.Builder(SellerRegistrationActivity.this);
-        builder.setCancelable(false);
-        builder.setView(R.layout.progress_layout);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-        storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                while (!uriTask.isComplete());
-                Uri urlImage = uriTask.getResult();
-                imageURL = urlImage.toString();
-                uploadData();
-                dialog.dismiss();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                dialog.dismiss();
+        // Submit form
+        registerBtn.setOnClickListener(v -> {
+            if (validateInputs()) {
+                saveSellerData();
             }
         });
     }
 
-    private void uploadData() {
-        String seller_name = sellerName.getText().toString();
-        String seller_phone = sellerPhone.getText().toString();
-        String seller_email = sellerEmail.getText().toString();
-        String seller_business_name = sellerBusinessName.getText().toString();
-        String seller_address = sellerAddress.getText().toString();
-        String seller_password = sellerPassword.getText().toString();
-        String seller_re_password = sellerRePassword.getText().toString();
-
-        // Create a new Sellers object
-        Sellers seller = new Sellers(seller_name, seller_phone, seller_email, seller_business_name, seller_address, seller_password, seller_re_password, imageURL);
-
-        // Get a reference to the database
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Sellers");
-
-        // Generate a unique ID for the new seller
-        String sellerId = databaseReference.push().getKey();
-
-        // Save the seller data under the unique ID
-        databaseReference.child(sellerId).setValue(seller).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    Toast.makeText(SellerRegistrationActivity.this, "Registration Success", Toast.LENGTH_SHORT).show();
-
-                    Intent intent = new Intent(SellerRegistrationActivity.this, SellerLogInActivity.class);
-                    // Pass the sellerId
-                    intent.putExtra("sellerId", sellerId);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(SellerRegistrationActivity.this, "Registration Failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(SellerRegistrationActivity.this, "Try again", Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
-}
-
-    /*
-    private void saveData() {
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Profile Images")
-                .child(uri.getLastPathSegment());
-        AlertDialog.Builder builder = new AlertDialog.Builder(SellerRegistrationActivity.this);
-        builder.setCancelable(false);
-        builder.setView(R.layout.progress_layout);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-        storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                while (!uriTask.isComplete());
-                Uri urlImage = uriTask.getResult();
-                imageURL = urlImage.toString();
-                uploadData();
-                dialog.dismiss();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                dialog.dismiss();
-            }
-        });
-    }
-
-    private void uploadData() {
-        String seller_name = sellerName.getText().toString();
-        String seller_phone = sellerPhone.getText().toString();
-        String seller_email = sellerEmail.getText().toString();
-        String seller_business_name = sellerBusinessName.getText().toString();
-        String seller_address = sellerAddress.getText().toString();
-        String seller_password = sellerPassword.getText().toString();
-        String seller_re_password = sellerRePassword.getText().toString();
-
-        Sellers seller = new Sellers(seller_name, seller_phone, seller_email, seller_business_name, seller_address, seller_password, seller_re_password, imageURL);
-        //We are changing the child from title to currentDate,
-        // because we will be updating title as well and it may affect child value.
-        String currentDate = DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
-        FirebaseDatabase.getInstance().getReference("Sellers").child(currentDate)
-                .setValue(seller).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            Toast.makeText(SellerRegistrationActivity.this, "Registration Success", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(SellerRegistrationActivity.this, SellerLogInActivity.class);
-                            startActivity(intent);
-
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(SellerRegistrationActivity.this, "Try again", Toast.LENGTH_SHORT).show();
-                    }
-
-                });
-
-    }
-    */
-////////////////////////////////////
-        /*
-    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK){
-                            Intent data = result.getData();
-                            uri = data.getData();
-                            profilepic.setImageURI(uri);
-                        } else {
-                            Toast.makeText(RegistrationActivity.this, "No profile picture", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                }
-        );
-
-
-
-        String name = sellerName.getText().toString();
-        String phone = sellerPhone.getText().toString();
-        String email = sellerEmail.getText().toString();
-        String business_name = sellerBusinessName.getText().toString();
-        String address = sellerAddress.getText().toString();
-        String password = sellerPassword.getText().toString();
-        String re_password = sellerRePassword.getText().toString();
-
-        if (!name.equals("") && !phone.equals("") && !email.equals("") &&
-                !business_name.equals("") && !address.equals("") && !password.equals("") &&
-                !re_password.equals("")){
-            mAuth.createUserWithEmailAndPassword(email,password)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()){
-                                final DatabaseReference rootRef;
-                                rootRef = FirebaseDatabase.getInstance().getReference();
-
-                                String sid = mAuth.getCurrentUser().getUid();
-
-                                HashMap<String, Object> sellerMap = new HashMap<>();
-                                sellerMap.put("sellerId", sid);
-                                sellerMap.put("name", name);
-                                sellerMap.put("phone", phone);
-                                sellerMap.put("email", email);
-                                sellerMap.put("business_name", business_name);
-                                sellerMap.put("address", address);
-                                sellerMap.put("password", password);
-                                sellerMap.put("re_password", re_password);
-
-                                rootRef.child("Sellers").child(sid).updateChildren(sellerMap)
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                Toast.makeText(SellerRegistrationActivity.this, "Registered successfully", Toast.LENGTH_SHORT).show();
-
-                                                Intent intent = new Intent(SellerRegistrationActivity.this, SellerLogInActivity.class);
-                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                startActivity(intent);
-                                            }
-                                        });
-                            }
-                        }
-                    });
-
-
-        }else{
-            Toast.makeText(this, "Complete the form..", Toast.LENGTH_SHORT).show();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            selectedImageUri = data.getData();
+            profileImageView.setImageURI(selectedImageUri);
         }
-    */
+    }
+
+    private boolean validateInputs() {
+        String password = passwordSeller.getText().toString().trim();
+        String confirmPassword = confirmPasswordSeller.getText().toString().trim();
+
+        // Remove the image selection validation - allow dummy image upload
+        if (!password.equals(confirmPassword)) {
+            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private void saveSellerData() {
+        progressBar.setVisibility(ProgressBar.VISIBLE);
+
+        try {
+            byte[] imageData;
+
+            // Check if user selected an image or use dummy image
+            if (selectedImageUri != null) {
+                // User selected an image - use it
+                InputStream inputStream = getContentResolver().openInputStream(selectedImageUri);
+                imageData = getBytes(inputStream);
+            } else {
+                // No image selected - use dummy image from drawable
+                imageData = getDummyImageBytes();
+            }
+
+            Toast.makeText(this, "Uploading...", Toast.LENGTH_SHORT).show();
+            AppUtils.trustEveryone();
+
+            String url = DbLink.BASE_URL + "register_seller.php";   //database link
+
+            VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(
+                    Request.Method.POST,
+                    url,
+                    response -> {
+                        progressBar.setVisibility(ProgressBar.INVISIBLE);
+                        String res = new String(response.data);
+                        Toast.makeText(SellerRegistrationActivity.this, "Registered successfully!" , Toast.LENGTH_SHORT).show();
+
+                        // On success, move to login
+                        if (res.contains("Sign Up Success")) {
+
+                            // Save to local Room database in background thread
+                            new Thread(() -> {
+                                try {
+                                    Seller seller = new Seller(
+                                            nameSeller.getText().toString().trim(),
+                                            phoneSeller.getText().toString().trim(),
+                                            emailSeller.getText().toString().trim(),
+                                            businessNameSeller.getText().toString().trim(),
+                                            addressSeller.getText().toString().trim(),
+                                            passwordSeller.getText().toString().trim(),
+                                            imageData
+                                    );
+
+                                    localDb.sellerDao().insertSeller(seller);
+
+                                    // Return to main thread for UI operations
+                                    runOnUiThread(() -> {
+                                        Toast.makeText(SellerRegistrationActivity.this,
+                                                "Registered successfully!", Toast.LENGTH_SHORT).show();
+
+                                        // Navigate to login
+                                        startActivity(new Intent(SellerRegistrationActivity.this, SellerLoginActivity.class));
+                                        finish();
+                                    });
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    runOnUiThread(() -> {
+                                        Toast.makeText(SellerRegistrationActivity.this,
+                                                "Error saving to local database: " + e.getMessage(),
+                                                Toast.LENGTH_LONG).show();
+                                    });
+                                }
+                            }).start();
+                        }
+                    },
+                    error -> {
+                        progressBar.setVisibility(ProgressBar.INVISIBLE);
+                        Toast.makeText(SellerRegistrationActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+            ) {
+                @Override
+                public Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("name", nameSeller.getText().toString().trim());
+                    params.put("phone_number", phoneSeller.getText().toString().trim());
+                    params.put("email", emailSeller.getText().toString().trim());
+                    params.put("business_name", businessNameSeller.getText().toString().trim());
+                    params.put("address", addressSeller.getText().toString().trim());
+                    params.put("password", passwordSeller.getText().toString().trim());
+                    return params;
+                }
+
+                @Override
+                public Map<String, DataPart> getByteData() {
+                    Map<String, DataPart> data = new HashMap<>();
+                    data.put("profile_image", new DataPart("profile.jpg", imageData, "image/jpeg"));
+                    return data;
+                }
+            };
+
+            Volley.newRequestQueue(this).add(multipartRequest);
+
+        } catch (IOException e) {
+            progressBar.setVisibility(ProgressBar.INVISIBLE);
+            e.printStackTrace();
+            Toast.makeText(this, "Failed to read image", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // New method to get dummy image bytes from drawable
+    private byte[] getDummyImageBytes() throws IOException {
+        InputStream inputStream = getResources().openRawResource(R.drawable.profile_icon);
+        return getBytes(inputStream);
+    }
+
+    private byte[] getBytes(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+        int len;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteBuffer.write(buffer, 0, len);
+        }
+        return byteBuffer.toByteArray();
+    }
+}

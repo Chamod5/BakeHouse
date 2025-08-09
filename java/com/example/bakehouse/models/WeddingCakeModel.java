@@ -1,64 +1,33 @@
 package com.example.bakehouse.models;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class WeddingCakeModel {
+    private int id;
+
+    private int seller_id;
+
     private String title;
+    private double price;
     private String description;
-    private String price;
-    private List<String> imageUrls;
-    private String sellerId;
+    private ArrayList<byte[]> images;
 
-    // Default constructor required for calls to DataSnapshot.getValue(Cake.class)
-    public WeddingCakeModel() {
-    }
+    // Getters and Setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    public WeddingCakeModel(String title, String description, String price, List<String> imageUrls, String sellerId) {
-        this.title = title;
-        this.description = description;
-        this.price = price;
-        this.imageUrls = imageUrls;
-        this.sellerId = sellerId;
-    }
+    public int getSeller_id() { return seller_id; }
+    public void setSeller_id(int seller_id) { this.seller_id = seller_id; }
 
-    // Getters and setters
-    public String getTitle() {
-        return title;
-    }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public double getPrice() { return price; }
+    public void setPrice(double price) { this.price = price; }
 
-    public String getDescription() {
-        return description;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public List<String> getImageUrls() {
-        return imageUrls;
-    }
-
-    public void setImageUrls(List<String> imageUrls) {
-        this.imageUrls = imageUrls;
-    }
-
-    public String getSellerId() {
-        return sellerId;
-    }
-
-    public void setSellerId(String sellerId) {
-        this.sellerId = sellerId;
-    }
+    public ArrayList<byte[]> getImages() { return images; }
+    public void setImages(ArrayList<byte[]> images) { this.images = images; }
 }
